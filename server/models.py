@@ -1,13 +1,24 @@
 from flask_sqlalchemy import SQLAlchemy
-from uuid import uuid4
-
-db = SQLAlchemy()
-
-def get_uuid():
-    return uuid4().hex
+from config import db
 
 class User(db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.String(32), primary_key=True, unique=True, default=get_uuid)
-    email = db.Column(db.String(150), unique=True)
+    id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
+    stats = db.relationship('Books', backref='users', lazy=True )
+
+    def to_json(self):
+        return{
+            "id":self.id,
+            "email":self.email,
+            "password":self.password
+        }
+    
+class Books(db.Model):
+    __tablename__ = 'books'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    book_id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    author = db.Column(db.String(100), nullable=False)
+    genre = db.Column(db.String(100), nullable=False)
