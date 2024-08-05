@@ -22,3 +22,12 @@ class Books(db.Model):
     title = db.Column(db.String(100), nullable=False)
     author = db.Column(db.String(100), nullable=False)
     genre = db.Column(db.String(100), nullable=False)
+
+    def to_json(self):
+        return {
+            "book_id": self.book_id,
+            "title": self.title,
+            "author": self.author,
+            "genre": self.genre,
+            "user_id": self.user_id  # Include user_id if needed
+        }
