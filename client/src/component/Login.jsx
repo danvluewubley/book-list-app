@@ -2,8 +2,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useAuth } from './AuthContext'; // Adjust the import path
+
 
 function Login() {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -18,6 +21,7 @@ function Login() {
         password,
       });
       setMessage(response.data.message);
+      login();
       navigate("/dashboard");
     } catch (error) {
       if (error.response) {
