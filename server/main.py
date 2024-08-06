@@ -2,8 +2,9 @@ from flask import jsonify, request, redirect
 from models import db, User, Books
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user, login_required
-from config import app, db
+from __init__ import create_app
 
+app = create_app()
 
 @app.route('/')
 def index():
@@ -54,12 +55,11 @@ def login():
     if not user or not check_password_hash(user.password, password): 
         return jsonify({"success": False}), 401
 
-    # Successful login
     login_user(user)
     return jsonify({"success": True}), 200  
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
 def logout():
     logout_user()
     return redirect("/")

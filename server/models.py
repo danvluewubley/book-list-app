@@ -1,19 +1,19 @@
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from config import db
+
+db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
-    stats = db.relationship('Books', backref='users', lazy=True )
+    books = db.relationship('Books', backref='users', lazy=True )
 
     def to_json(self):
         return{
             "id":self.id,
             "email":self.email,
-            "password":self.password
         }
     
 class Books(db.Model):
@@ -30,5 +30,5 @@ class Books(db.Model):
             "title": self.title,
             "author": self.author,
             "genre": self.genre,
-            "user_id": self.user_id  # Include user_id if needed
+            "user_id": self.user_id
         }
