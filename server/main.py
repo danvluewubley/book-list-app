@@ -44,19 +44,20 @@ def signup():
     login_user(new_user)
     return jsonify({"message": "User created successfully"}), 201
 
-@app.route('/login', methods=["POST"])
-def login():    
+@app.route('/login', methods=['POST'])
+def login():
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
     email = data.get('email')
     password = data.get('password')
+    
+    if not email or not password:
+        return jsonify({"error": "Email and password are required"}), 400
+    
 
-    user = User.query.filter_by(email=email).first()
-
-    if not user or not check_password_hash(user.password, password): 
-        return jsonify({"success": False}), 401
-
-    login_user(user)
-    return jsonify({"success": True}), 200  
+    return jsonify({"message": "Login successful!"}), 200
 
 
 @app.route("/logout", methods=["POST"])
@@ -166,8 +167,7 @@ def update_book(id):
         return jsonify(book.to_json()), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": "Error updating book"}), 500
-    
+        return jsonify({"error": "Error updating book"}), 500 
   
 with app.app_context():
   db.create_all()

@@ -1,17 +1,19 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
-function Signup() {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
-      const response = await axios.post("http://localhost:8080/signup", {
+      const response = await axios.post("http://localhost:8080/login", {
         email,
         password,
       });
@@ -26,10 +28,10 @@ function Signup() {
     }
   };
 
-  const handleClick = () => {
-    navigate("/")
-  }
 
+  const handleClick = () => {
+    navigate("/");
+  };
 
   return (
     <>
@@ -43,10 +45,10 @@ function Signup() {
         >
           <div className="flex flex-col gap-4 p-6">
             <h4 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
-              Sign Up
+              Login
             </h4>
             <p className="block mb-3 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
-              Enter your email and password to Sign Up.
+              Enter your email and password to Login.
             </p>
             <h6 className="block -mb-2 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
               Your Email
@@ -84,7 +86,7 @@ function Signup() {
               type="button"
               onClick={handleSubmit}
             >
-              Sign Up
+              Login
             </button>
           </div>
         </div>
@@ -93,4 +95,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;
