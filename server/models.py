@@ -1,7 +1,8 @@
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from config import db
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)

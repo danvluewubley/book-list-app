@@ -1,6 +1,7 @@
-from flask import jsonify, request
+from flask import jsonify, request, redirect
 from models import db, User, Books
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, logout_user, current_user, login_required
 from config import app, db
 
 
@@ -39,7 +40,30 @@ def signup():
         db.session.rollback()
         return jsonify({"error": "Error creating user"}), 500
 
+    login_user(new_user)
     return jsonify({"message": "User created successfully"}), 201
+
+@app.route('/login', methods=["POST"])
+def login():    
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user or not check_password_hash(user.password, password): 
+        return jsonify({"success": False}), 401
+
+    # Successful login
+    login_user(user)
+    return jsonify({"success": True}), 200  
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/")
+
 
 @app.route('/delete/<int:id>', methods=["DELETE"])
 def delete_user(id):

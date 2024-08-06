@@ -1,22 +1,23 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import SignupForm from "./component/SignupForm";
-import LoginForm from "./component/LoginForm";
-import Dashboard from "./component/Dashboard";
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./component/Navbar";
+import "./index.css";
+
+const Home = lazy(() => import("./component/Home"));
+const Signup = lazy(() => import("./component/Signup"));
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <header className="App-header">
-          <h1>Welcome to the Signup Page</h1>
-        </header>
-        <SignupForm />
-        <LoginForm />
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </div>
+      <Navbar />
+      <main>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<Signup />} />
+          </Routes>
+        </Suspense>
+      </main>
     </Router>
   );
 }
